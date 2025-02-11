@@ -2,8 +2,8 @@ import getpass
 
 def getCreds():
 	print("Username: ")
-	username = input()
+	username = getpass.getuser()
 	print("Password: ")
-	getpass.getpass("Entering password: ")
+	password = getpass.getpass("Entering password: ")
 	return username, password
 
