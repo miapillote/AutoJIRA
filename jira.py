@@ -3,7 +3,6 @@ import time
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
 import sys
-import login
 
 customer, action, items = [sys.argv[1], sys.argv[2]], sys.argv[3], ", ".join(sys.argv[4:]) #stringify the items
 print("Customer: ", customer)
@@ -12,7 +11,8 @@ print("Items: ", items)
 
 #Rettner acct is 2, auto acct is 4
 options = webdriver.ChromeOptions()
-options.add_argument(r'--user-data-dir=C:\\Users\\rettnerhelpdesk\\AppData\\Local\\Google\\Chrome')
+#options.add_argument(r'--user-data-dir=C:\\Users\\rettnerhelpdesk\\AppData\\Local\\Google\\Chrome') #Rettner Chrome path
+options.add_argument(r'--user-data-dir=C:\\Users\\miapi\\AppData\\Local\\Google\\Chrome') #Test env Chrome path
 options.add_argument('--profile-directory=Profile 4')
 browser = webdriver.Chrome(options=options)
 browser.implicitly_wait(15)
@@ -20,25 +20,8 @@ browser.implicitly_wait(15)
 #jira ticket landing page
 landing = "https://service.rochester.edu/servicedesk/customer/portal/101/create/358?q=lending&q_time=1693601714516"
 browser.get(landing)
-time.sleep(20)
+time.sleep(5)
 
-loggedIn = False
-
-while not loggedIn:
-    #check for redirect
-    if(browser.current_url != landing):
-        print("Please log in.")
-        print("Username: ")
-        username = input()
-        print("Password: ") 
-        password = input()
-        print("Attempting login...")
-        login.login(browser, username, password)
-        time.sleep(3)
-    else: 
-        loggedIn = True
-    
-"""
 #attempt filling form
 customerElement = browser.find_elements(By.XPATH, '//*[@id="react-select-2-input"]')
 sourceElement = browser.find_elements(By.XPATH, '//*[@id="react-select-customfield_10808-instance-input"]')
@@ -82,4 +65,4 @@ time.sleep(10)
 browser.find_elements(By.XPATH, '//*[@id="action_id_941"]/a/div/div[1]')[0].click()
 time.sleep(10)
 print('Ticket submitted successfully.')
-"""
+
