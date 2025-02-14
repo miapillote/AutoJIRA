@@ -3,7 +3,6 @@ import time
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 
-
 """
 Flow:
 
@@ -51,4 +50,7 @@ def jiraLogin(browser, username, password):
 	return None
 
 def staleLogin(browser):
+	return None
+
+def checkStatus(browser):
 	return None
