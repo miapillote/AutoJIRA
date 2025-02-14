@@ -1,5 +1,6 @@
 import tkinter as tk
 from tkinter import messagebox
+import JiraFormAutomation as jira
 
 def submit_form():
     first_name = first_name_entry.get()
@@ -16,6 +17,9 @@ def submit_form():
     print(f"Status: {status}")
     print(f"Items:\n{items}")
     
+    ticket = jira.JiraFormAutomation([first_name, last_name],status,items)
+    ticket.run()
+
     messagebox.showinfo("Success", "Form submitted successfully!")
 
 # Create main window
