@@ -1,6 +1,7 @@
 To setup on the Rettner machine:
 
 - Clone into an easily accessible directory in on the desktop (ideally the one I made called "startup" (? I think ?)
+- Replace my path to chrome with the Rettner path to Chrome (JiraFormAutomation ln 13)
 - Add powershell script in the "startup" folder:
 	- probably located at "C:\ProgramData\Microsoft\Windows\Start Menu\Programs\Startup" or something
 	- restart the machine and see if it starts up
