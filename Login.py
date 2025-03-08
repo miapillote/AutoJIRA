@@ -1,56 +1,49 @@
-import getpass
-import time
-from selenium.webdriver.common.by import By
-from selenium.webdriver.common.keys import Keys
+import tkinter as tk
+from tkinter import messagebox
 
-"""
-Flow:
+class LoginForm:
+    def __init__(self, root): #include browser session
+        self.root = root
+        self.root.title("Login Form")
+        self.root.geometry("300x200")
+        
+        # Username Label and Entry
+        self.label_username = tk.Label(root, text="Username")
+        self.label_username.pack(pady=5)
+        
+        self.entry_username = tk.Entry(root)
+        self.entry_username.pack(pady=5)
+        
+        # Password Label and Entry
+        self.label_password = tk.Label(root, text="Password")
+        self.label_password.pack(pady=5)
+        
+        self.entry_password = tk.Entry(root, show="*")
+        self.entry_password.pack(pady=5)
+        
+        # Login Button
+        self.login_button = tk.Button(root, text="Login", command=self.on_login)
+        self.login_button.pack(pady=20)
 
-0. Trigger
-1. Follow link
-2. checkLoginStatus(browser): (using expected conditions)
-	case 1: landing page reached -> 3
-	case 2: login page reached -> Login(browser); checkLoginStatus(browser)
-	case 3: stale request -> Refresh(); checkLoginStatus(browser)
-3. SubmitTicket: New ticket object.
-	- Customer:
-		- Name
-		- Email
-		- NetID
-	- action {Loaned, Returned}
-	- item(s)
-		- Make a dictionary of loaner items, eventually
-		- dropdown menu
-4. Add to database
-5. Create calendar event
+    def on_login(self):
+        username = self.entry_username.get()
+        password = self.entry_password.get()
+        
+        if self.attempt_login:
+            messagebox.showinfo("Login Successful","Welcome!")
+            self.root.destroy()
+        else:
+            messagebox.showerror("Login Failed","Please try again.")
+            
+    def attempt_login(self):
+        return True
 
-"""
 
-landingURL = "https://service.rochester.edu/servicedesk/customer/portal/101/create/358?q=lending&q_time=1693601714516"
-elements = {
-	'loginUsername': '//*[@id="usernamevis"]',
-	'loginPassword': '//*[@id="password"]',
-	'loginSubmit': '//*[@id="log-on"]'
-}
+# Create the main window
+root = tk.Tk()
 
-def getCreds():
-	print("Username: ")
-	username = input()
-	print("Password: ")
-	password = getpass.getpass("Entering password: ")
-	return username, password
+# Create an instance of the LoginForm class
+login_form = LoginForm(root)
 
-def jiraLogin(browser, username, password):
-	print("Checking session...")
-	browser.get(landingURL)
-	browser.find_elements(By.XPATH, elements['loginUsername'])[0].send_keys(username)
-	browser.find_elements(By.XPATH, elements['loginPassword'])[0].send_keys(password)
-	time.sleep(0.5)
-	browser.find_elements(By.XPATH, elements['loginSubmit'])[0].click()
-	return None
-
-def staleLogin(browser):
-	return None
-
-def checkStatus(browser):
-	return None
+# Run the Tkinter event loop
+root.mainloop()
