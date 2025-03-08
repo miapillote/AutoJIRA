@@ -19,8 +19,21 @@ def submit_form():
     
     ticket = jira.JiraFormAutomation([first_name, last_name],status,items)
     ticket.run()
+    
+    clear_fields()
 
     messagebox.showinfo("Success", "Form submitted successfully!")
+
+def clear_fields():
+    # Clear Entry fields
+    first_name_entry.delete(0, tk.END)
+    last_name_entry.delete(0, tk.END)
+    
+    # Clear Status Radio Buttons
+    status_var.set("Loaned")  # or set it to the default value
+    
+    # Clear Items Text field
+    items_text.delete("1.0", tk.END)
 
 # Create main window
 root = tk.Tk()

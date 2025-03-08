@@ -94,6 +94,7 @@ class JiraFormAutomation:
         self.assign_ticket()
         self.close_ticket()
         self.browser.quit()
+        return True
 
 if __name__ == "__main__":
     customer = [sys.argv[1], sys.argv[2]]
