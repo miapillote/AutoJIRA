@@ -1,8 +1,12 @@
 import tkinter as tk
 from tkinter import messagebox
+from selenium import webdriver
+from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.common.by import By
 
 class LoginForm:
-    def __init__(self, root): #include browser session
+    def __init__(self, root, browser): #include browser session
+        self.browser = browser
         self.root = root
         self.root.title("Login Form")
         self.root.geometry("300x200")
@@ -24,26 +28,41 @@ class LoginForm:
         # Login Button
         self.login_button = tk.Button(root, text="Login", command=self.on_login)
         self.login_button.pack(pady=20)
+        
+        self.root.mainloop()
 
     def on_login(self):
         username = self.entry_username.get()
         password = self.entry_password.get()
-        
-        if self.attempt_login:
-            messagebox.showinfo("Login Successful","Welcome!")
-            self.root.destroy()
-        else:
-            messagebox.showerror("Login Failed","Please try again.")
+        self.attempt_login(username, password, self.browser)
             
-    def attempt_login(self):
-        return True
+    def attempt_login(self, username, password, driver):
+        try:
+            # Locate and fill in the username field
+            username_field = driver.find_element(By.XPATH, "//*[@id='usernamevis']")
+            password_field = driver.find_element(By.XPATH, "//*[@id='password']")
+            login_button = driver.find_element(By.XPATH, "//*[@id='log-on']")
+
+            # Fill the username and password fields
+            username_field.send_keys(username)
+            password_field.send_keys(password)
+
+            # Click the login button
+            login_button.click()
+            self.root.destroy()
+            # Wait for a few seconds to allow the page to load
+            time.sleep(3)
+
+        except Exception as e:
+            # Handle any exceptions (e.g., element not found)
+            return f"Error: {str(e)}"
 
 
 # Create the main window
-root = tk.Tk()
+#root = tk.Tk()
 
 # Create an instance of the LoginForm class
-login_form = LoginForm(root)
+#login_form = LoginForm(root)
 
 # Run the Tkinter event loop
-root.mainloop()
+#root.mainloop()

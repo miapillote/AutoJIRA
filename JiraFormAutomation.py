@@ -1,5 +1,8 @@
+import Login
 import time
 import sys
+import tkinter as tk
+from tkinter import messagebox
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
@@ -10,8 +13,8 @@ class JiraFormAutomation:
         self.action = action
         self.items = items
         self.options = webdriver.ChromeOptions()
-        self.options.add_argument(r'--user-data-dir=C:\\Users\\miapi\\AppData\\Local\\Google\\Chrome')
-        self.options.add_argument('--profile-directory=Profile 4')
+        #self.options.add_argument(r'--user-data-dir=C:\\Users\\miapi\\AppData\\Local\\Google\\Chrome')
+        self.options.add_argument('--profile-directory=Profile 1')
         self.browser = webdriver.Chrome(options=self.options)
         self.browser.implicitly_wait(15)
         
@@ -19,6 +22,9 @@ class JiraFormAutomation:
         landing = "https://service.rochester.edu/servicedesk/customer/portal/101/create/358?q=lending&q_time=1693601714516"
         self.browser.get(landing)
         time.sleep(5)
+        if "service.rochester.edu" not in self.browser.current_url:
+            Login.LoginForm(tk.Tk(), self.browser)
+            self.open_landing_page()
     
     def fill_form(self):
         customer_element = self.browser.find_elements(By.XPATH, '//*[@id="react-select-2-input"]')
@@ -61,7 +67,7 @@ class JiraFormAutomation:
     
     def run(self):
         self.open_landing_page()
-        self.fill_form()
+        #self.fill_form()
         #self.resolve_ticket()
         #self.assign_ticket()
         #self.close_ticket()
