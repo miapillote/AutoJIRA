@@ -13,8 +13,8 @@ class JiraFormAutomation:
         self.action = action
         self.items = items
         self.options = webdriver.ChromeOptions()
-        #self.options.add_argument(r'--user-data-dir=C:\\Users\\miapi\\AppData\\Local\\Google\\Chrome')
-        self.options.add_argument('--profile-directory=Profile 1')
+        self.options.add_argument(r'--user-data-dir=C:/Users/rettnerhelpdesk/AppData/Local/Google/Chrome')
+        self.options.add_argument('--profile-directory=Profile 4')
         self.browser = webdriver.Chrome(options=self.options)
         self.browser.implicitly_wait(15)
         
@@ -67,10 +67,10 @@ class JiraFormAutomation:
     
     def run(self):
         self.open_landing_page()
-        #self.fill_form()
-        #self.resolve_ticket()
-        #self.assign_ticket()
-        #self.close_ticket()
+        self.fill_form()
+        self.resolve_ticket()
+        self.assign_ticket()
+        self.close_ticket()
         self.browser.quit()
 
 if __name__ == "__main__":
