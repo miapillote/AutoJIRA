@@ -25,7 +25,7 @@ def submit_form():
 
     # If a file is selected, no other inputs are needed
     if file_path:
-        print(f"File Selected: {file_path}")
+        #print(f"File Selected: {file_path}")
         ticket.read_form(file_path)
         # Clear fields
         clear_fields()
@@ -50,11 +50,13 @@ def submit_form():
         return
 
     # If a file is not selected, continue with form submission
+    """
     print(f"First Name: {first_name}")
     print(f"Last Name: {last_name}")
     print(f"Status: {status}")
     print(f"Items:\n{items}")
     print(f"Selected Date: {selected_date}")
+    """
 
     clear_fields()
     ticket.manual_input([first_name, last_name], items, selected_date, status)

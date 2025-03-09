@@ -34,7 +34,7 @@ class LoginForm:
     def on_login(self):
         username = self.entry_username.get()
         password = self.entry_password.get()
-        print("on_login -> attempt_login")
+        #print("on_login -> attempt_login")
         self.attempt_login(username, password, self.browser)
             
     def attempt_login(self, username, password, driver):
@@ -51,10 +51,10 @@ class LoginForm:
             # Click the login button
             login_button.click()
             self.root.destroy()
-            print("main loop destroyed")
+            #print("main loop destroyed")
             # Wait for a few seconds to allow the page to load
             time.sleep(3)
-            print("waited after main loop was destroyed")
+            #print("waited after main loop was destroyed")
 
         except Exception as e:
             # Handle any exceptions (e.g., element not found)
