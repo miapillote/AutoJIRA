@@ -1,5 +1,5 @@
 import tkinter as tk
-from tkinter import messagebox, filedialog
+from tkinter import messagebox, filedialog, ttk
 import JiraFormAutomation as jira
 from tkcalendar import Calendar
 from datetime import datetime
@@ -8,7 +8,14 @@ import Ticket
 
 
 def submit_form():
+    # Set up progress bar
+    progress.set(0)
+    progress_bar.grid(row=4, column=1, padx=20, pady=1, sticky="w")
+
+    # Initialize ticket
     ticket = Ticket.Ticket()
+
+    # Retrieve data
     first_name = first_name_entry.get()
     last_name = last_name_entry.get()
     status = status_var.get()
@@ -22,7 +29,9 @@ def submit_form():
         ticket.read_form(file_path)
         # Clear fields
         clear_fields()
-        automation = jira.JiraFormAutomation(ticket)  # , None, file_path Assuming no other fields are needed when file is selected
+
+        # TODO: give error message when the automation fails
+        automation = jira.JiraFormAutomation(ticket, root, progress_bar, progress)
         automation.run()
 
         messagebox.showinfo("Success", "Form submitted successfully with the file!")
@@ -49,7 +58,7 @@ def submit_form():
 
     clear_fields()
     ticket.manual_input([first_name, last_name], items, selected_date, status)
-    automation = jira.JiraFormAutomation(ticket) #, selected_date, None
+    automation = jira.JiraFormAutomation(ticket, root, progress_bar, progress)
     automation.run()
     messagebox.showinfo("Success", "Form submitted successfully!")
 
@@ -125,6 +134,10 @@ items_text.grid(row=11, column=0, padx=20, pady=5, sticky="w")
 
 # Submit Button
 tk.Button(left_frame, text="Submit", command=submit_form).grid(row=12, column=0, padx=20, pady=10, sticky="w")
+
+# Progress Bar
+progress = tk.DoubleVar()
+progress_bar = ttk.Progressbar(root, variable=progress, maximum=100, length=200)
 
 # Create a frame for the calendar (right side)
 right_frame = tk.Frame(root)
