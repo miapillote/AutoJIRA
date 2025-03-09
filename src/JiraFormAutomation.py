@@ -80,7 +80,7 @@ class JiraFormAutomation:
 
     def close_ticket(self):
         print('Closing ticket')
-        time.sleep(10)
+        time.sleep(20)
         transition_bar = WebDriverWait(self.browser, 20).until(
             EC.element_to_be_clickable((By.XPATH, '//*[@id="opsbar-transitions_more"]/span')))
         transition_bar.click()
