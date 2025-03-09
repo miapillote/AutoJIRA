@@ -4,8 +4,11 @@ import JiraFormAutomation as jira
 from tkcalendar import Calendar
 from datetime import datetime
 import os
+import Ticket
+
 
 def submit_form():
+    ticket = Ticket.Ticket()
     first_name = first_name_entry.get()
     last_name = last_name_entry.get()
     status = status_var.get()
@@ -16,11 +19,11 @@ def submit_form():
     # If a file is selected, no other inputs are needed
     if file_path:
         print(f"File Selected: {file_path}")
-        ticket = jira.JiraFormAutomation([], "", "")  # , None, file_path Assuming no other fields are needed when file is selected
-        ticket.run()
-
+        ticket.read_form(file_path)
         # Clear fields
         clear_fields()
+        automation = jira.JiraFormAutomation(ticket)  # , None, file_path Assuming no other fields are needed when file is selected
+        automation.run()
 
         messagebox.showinfo("Success", "Form submitted successfully with the file!")
         return
@@ -44,12 +47,12 @@ def submit_form():
     print(f"Items:\n{items}")
     print(f"Selected Date: {selected_date}")
 
-    ticket = jira.JiraFormAutomation([first_name, last_name], status, items) #, selected_date, None
-    ticket.run()
-
     clear_fields()
-
+    ticket.manual_input([first_name, last_name], items, selected_date, status)
+    automation = jira.JiraFormAutomation(ticket) #, selected_date, None
+    automation.run()
     messagebox.showinfo("Success", "Form submitted successfully!")
+
 
 def clear_fields():
     # Clear Entry fields
@@ -69,11 +72,13 @@ def clear_fields():
     file_path_var.set("")
     file_label.config(text="No file selected")  # Reset the label text
 
+
 def browse_file():
     file_path = filedialog.askopenfilename(title="Select a File", filetypes=[("All Files", "*.*")])
     if file_path:
         file_path_var.set(file_path)
         file_label.config(text=os.path.basename(file_path))  # Update label with file name
+
 
 # Create main window
 root = tk.Tk()
@@ -108,8 +113,10 @@ last_name_entry.grid(row=6, column=0, padx=5, pady=5, sticky="w")
 # Status (Radio Buttons)
 tk.Label(left_frame, text="Status:").grid(row=7, column=0, padx=20, pady=5, sticky="w")
 status_var = tk.StringVar(value="Loaned")
-tk.Radiobutton(left_frame, text="Loaned", variable=status_var, value="Loaned").grid(row=8, column=0, padx=20, pady=5, sticky="w")
-tk.Radiobutton(left_frame, text="Returned", variable=status_var, value="Returned").grid(row=9, column=0, padx=20, pady=5, sticky="w")
+tk.Radiobutton(left_frame, text="Loaned", variable=status_var, value="Loaned").grid(row=8, column=0, padx=20, pady=5,
+                                                                                    sticky="w")
+tk.Radiobutton(left_frame, text="Returned", variable=status_var, value="Returned").grid(row=9, column=0, padx=20,
+                                                                                        pady=5, sticky="w")
 
 # Items List
 tk.Label(left_frame, text="Items:").grid(row=10, column=0, padx=20, pady=5, sticky="w")

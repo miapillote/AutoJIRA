@@ -1,4 +1,5 @@
 import Login
+import Ticket
 import sys
 import tkinter as tk
 import time
@@ -11,10 +12,20 @@ from selenium.webdriver.support import expected_conditions as EC
 
 
 class JiraFormAutomation:
-    def __init__(self, customer, action, items):
+    """def __init__(self, customer, action, items):
         self.customer = customer
         self.action = action
         self.items = items
+        self.options = webdriver.ChromeOptions()
+        self.options.add_argument(r'--user-data-dir=C:/Users/rettnerhelpdesk/AppData/Local/Google/Chrome')
+        self.options.add_argument('--profile-directory=Profile 4')
+        self.browser = webdriver.Chrome(options=self.options)
+    """
+
+    def __init__(self, ticket: Ticket):
+        self.customer = ticket.name
+        self.action = ticket.action
+        self.items = ticket.item
         self.options = webdriver.ChromeOptions()
         self.options.add_argument(r'--user-data-dir=C:/Users/rettnerhelpdesk/AppData/Local/Google/Chrome')
         self.options.add_argument('--profile-directory=Profile 4')
@@ -25,14 +36,14 @@ class JiraFormAutomation:
         self.browser.get(landing)
 
         # Wait for page load and check if login is required
-        WebDriverWait(self.browser, 15).until(EC.url_contains("service.rochester.edu"))
+        WebDriverWait(self.browser, 30).until(EC.url_contains("service.rochester.edu"))
         if "service.rochester.edu" not in self.browser.current_url:
             Login.LoginForm(tk.Tk(), self.browser)
             self.open_landing_page()
 
     def fill_form(self):
         # Wait until the customer input is present
-        customer_element = WebDriverWait(self.browser, 20).until(
+        customer_element = WebDriverWait(self.browser, 30).until(
             EC.presence_of_element_located((By.XPATH, '//*[@id="react-select-2-input"]'))
         )
         source_element = self.browser.find_elements(By.XPATH,
@@ -43,7 +54,7 @@ class JiraFormAutomation:
         time.sleep(2)
         customer_element.send_keys(Keys.RETURN)
 
-        WebDriverWait(self.browser, 20).until(
+        WebDriverWait(self.browser, 30).until(
             EC.element_to_be_clickable((By.XPATH, '//*[@id="react-select-customfield_10808-instance-input"]')))
         source_element[0].send_keys('Walk In')
         source_element[0].send_keys(Keys.RETURN)
@@ -53,15 +64,15 @@ class JiraFormAutomation:
         print("Form filled")
 
         # Wait for form submission and completion
-        WebDriverWait(self.browser, 20).until(EC.invisibility_of_element_located((By.XPATH, '//*[@id="summary"]')))
+        WebDriverWait(self.browser, 30).until(EC.invisibility_of_element_located((By.XPATH, '//*[@id="summary"]')))
 
     def resolve_ticket(self):
         print('Resolving')
-        resolve = WebDriverWait(self.browser, 20).until(
+        resolve = WebDriverWait(self.browser, 30).until(
             EC.element_to_be_clickable((By.XPATH, '//*[@id="com.atlassian.servicedesk:workflow-transition-761"]'))
         )
         resolve.click()
-        WebDriverWait(self.browser, 20).until(EC.element_to_be_clickable((By.XPATH, '/html/body/section/form')))
+        WebDriverWait(self.browser, 30).until(EC.element_to_be_clickable((By.XPATH, '/html/body/section/form')))
         self.browser.find_elements(By.XPATH, '/html/body/section/form')[0].submit()
         print("Ticket resolved")
 
@@ -72,7 +83,7 @@ class JiraFormAutomation:
             0].click()
 
         # Wait until the assign-to-me button is clickable
-        assign_button = WebDriverWait(self.browser, 20).until(
+        assign_button = WebDriverWait(self.browser, 30).until(
             EC.element_to_be_clickable((By.XPATH, '//*[@id="assign-to-me"]'))
         )
         assign_button.click()
@@ -81,10 +92,10 @@ class JiraFormAutomation:
     def close_ticket(self):
         print('Closing ticket')
         time.sleep(20)
-        transition_bar = WebDriverWait(self.browser, 20).until(
+        transition_bar = WebDriverWait(self.browser, 30).until(
             EC.element_to_be_clickable((By.XPATH, '//*[@id="opsbar-transitions_more"]/span')))
         transition_bar.click()
-        close_button = WebDriverWait(self.browser, 20).until(
+        close_button = WebDriverWait(self.browser, 30).until(
             EC.element_to_be_clickable((By.XPATH, '//*[@id="action_id_941"]/a/div/div[1]'))
         )
         close_button.click()
