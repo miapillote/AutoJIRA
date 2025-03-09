@@ -3,7 +3,6 @@ import Ticket
 import sys
 import tkinter as tk
 import time
-from tkinter import messagebox
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
@@ -12,16 +11,6 @@ from selenium.webdriver.support import expected_conditions as EC
 
 
 class JiraFormAutomation:
-    """def __init__(self, customer, action, items):
-        self.customer = customer
-        self.action = action
-        self.items = items
-        self.options = webdriver.ChromeOptions()
-        self.options.add_argument(r'--user-data-dir=C:/Users/rettnerhelpdesk/AppData/Local/Google/Chrome')
-        self.options.add_argument('--profile-directory=Profile 4')
-        self.browser = webdriver.Chrome(options=self.options)
-    """
-
     def __init__(self, ticket: Ticket, root, progress_bar, progress):
         self.NUM_UPDATES = 11
 
@@ -35,6 +24,7 @@ class JiraFormAutomation:
         self.options = webdriver.ChromeOptions()
         self.options.add_argument(r'--user-data-dir=C:/Users/rettnerhelpdesk/AppData/Local/Google/Chrome')
         self.options.add_argument('--profile-directory=Profile 4')
+        self.options.add_argument('--headless')
         self.browser = webdriver.Chrome(options=self.options)
 
     def open_landing_page(self):
@@ -71,25 +61,25 @@ class JiraFormAutomation:
 
         summary_element[0].send_keys(self.action, ": ", self.items)
         summary_element[0].send_keys(Keys.RETURN)
-        print("Form filled")
+        #print("Form filled")
         self.update_progress()
 
         # Wait for form submission and completion
         WebDriverWait(self.browser, 30).until(EC.invisibility_of_element_located((By.XPATH, '//*[@id="summary"]')))
 
     def resolve_ticket(self):
-        print('Resolving')
+        #print('Resolving')
         resolve = WebDriverWait(self.browser, 30).until(
             EC.element_to_be_clickable((By.XPATH, '//*[@id="com.atlassian.servicedesk:workflow-transition-761"]'))
         )
         resolve.click()
         WebDriverWait(self.browser, 30).until(EC.element_to_be_clickable((By.XPATH, '/html/body/section/form')))
         self.browser.find_elements(By.XPATH, '/html/body/section/form')[0].submit()
-        print("Ticket resolved")
+        #print("Ticket resolved")
         self.update_progress()
 
     def assign_ticket(self):
-        print('Opening ticket information')
+        #print('Opening ticket information')
         time.sleep(2)
         self.browser.find_elements(By.XPATH, '//*[@id="content"]/div/header/div/div/div[2]/div[2]/div/ol/li[3]/a')[
             0].click()
@@ -100,10 +90,10 @@ class JiraFormAutomation:
         )
         assign_button.click()
         self.update_progress()
-        print('Assigned to me')
+        #print('Assigned to me')
 
     def close_ticket(self):
-        print('Closing ticket')
+        #print('Closing ticket')
         time.sleep(20)
         transition_bar = WebDriverWait(self.browser, 30).until(
             EC.element_to_be_clickable((By.XPATH, '//*[@id="opsbar-transitions_more"]/span')))
@@ -115,7 +105,7 @@ class JiraFormAutomation:
         close_button.click()
         time.sleep(10)
         self.update_progress()
-        print('Ticket closed successfully.')
+        #print('Ticket closed successfully.')
 
     def run(self):
         self.open_landing_page()
