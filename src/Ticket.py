@@ -1,6 +1,7 @@
 from pypdf import PdfReader
 import re
 import datetime
+from datetime import timedelta
 
 
 class Ticket:
@@ -18,6 +19,8 @@ class Ticket:
         self.name = name
         self.item = item
         self.date = date
+        self.due = date + timedelta(days=3)
+        self.due = self.due.replace(hour=10, minute=0, second=0, microsecond=0)
 
     def read_form(self, pdf):
         reader = PdfReader(pdf)
@@ -43,3 +46,11 @@ class Ticket:
         date_string_cleaned = re.sub(r'(\d+)(st|nd|rd|th)', r'\1', date_string)
         date_format = "%A, %B %d %Y, %I:%M %p"
         return datetime.datetime.strptime(date_string_cleaned, date_format)
+
+
+def test():
+    ticket = Ticket()
+    ticket.manual_input(["Mia", "Pillote"], "Test Item", datetime.datetime.now(), "Testing")
+    print(ticket.date)
+    print(ticket.due)
+    return ticket
