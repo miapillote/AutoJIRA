@@ -6,7 +6,7 @@ smoothly.
 
 https://karenapp.io/articles/how-to-automate-google-calendar-with-python-using-the-calendar-api/
 
-I need to switch the project to a different account so I can add rettnerhelpdesk as a test user...?
+I need to switch the project to a different account, so I can add rettnerhelpdesk as a test user...?
 
 """
 import Ticket

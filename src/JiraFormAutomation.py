@@ -1,13 +1,14 @@
-import Login
 import Ticket
-import sys
-import tkinter as tk
 import time
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support import expected_conditions as ec
+
+LANDING = "https://service.rochester.edu/servicedesk/customer/portal/101/create/358?q=lending&q_time=1693601714516"
+CHROME_PATH = r'--user-data-dir=C:/Users/rettnerhelpdesk/AppData/Local/Google/Chrome'
+CHROME_PROFILE = '--profile-directory=Profile 4'
 
 
 class JiraFormAutomation:
@@ -22,18 +23,17 @@ class JiraFormAutomation:
         self.action = ticket.action
         self.items = ticket.item
         self.options = webdriver.ChromeOptions()
-        self.options.add_argument(r'--user-data-dir=C:/Users/rettnerhelpdesk/AppData/Local/Google/Chrome')
-        self.options.add_argument('--profile-directory=Profile 4')
+        self.options.add_argument(CHROME_PATH)
+        self.options.add_argument(CHROME_PROFILE)
         self.options.add_argument('--headless')
         self.browser = webdriver.Chrome(options=self.options)
 
     def open_landing_page(self):
-        landing = "https://service.rochester.edu/servicedesk/customer/portal/101/create/358?q=lending&q_time=1693601714516"
-        self.browser.get(landing)
+        self.browser.get(LANDING)
         self.update_progress()
 
         # Wait for page load and check if login is required
-        WebDriverWait(self.browser, 30).until(EC.url_contains("service.rochester.edu"))
+        WebDriverWait(self.browser, 30).until(ec.url_contains("service.rochester.edu"))
         if "service.rochester.edu" not in self.browser.current_url:
             return "Could not reach landing page, try logging in."
             # Login.LoginForm(tk.Tk(), self.browser)
@@ -43,7 +43,7 @@ class JiraFormAutomation:
     def fill_form(self):
         # Wait until the customer input is present
         customer_element = WebDriverWait(self.browser, 30).until(
-            EC.presence_of_element_located((By.XPATH, '//*[@id="react-select-2-input"]'))
+            ec.presence_of_element_located((By.XPATH, '//*[@id="react-select-2-input"]'))
         )
         self.update_progress()
         source_element = self.browser.find_elements(By.XPATH,
@@ -56,57 +56,57 @@ class JiraFormAutomation:
         self.update_progress()
 
         WebDriverWait(self.browser, 30).until(
-            EC.element_to_be_clickable((By.XPATH, '//*[@id="react-select-customfield_10808-instance-input"]')))
+            ec.element_to_be_clickable((By.XPATH, '//*[@id="react-select-customfield_10808-instance-input"]')))
         source_element[0].send_keys('Walk In')
         source_element[0].send_keys(Keys.RETURN)
 
         summary_element[0].send_keys(self.action, ": ", self.items)
         summary_element[0].send_keys(Keys.RETURN)
-        #print("Form filled")
+        # print("Form filled")
         self.update_progress()
 
         # Wait for form submission and completion
-        WebDriverWait(self.browser, 30).until(EC.invisibility_of_element_located((By.XPATH, '//*[@id="summary"]')))
+        WebDriverWait(self.browser, 30).until(ec.invisibility_of_element_located((By.XPATH, '//*[@id="summary"]')))
 
     def resolve_ticket(self):
-        #print('Resolving')
+        # print('Resolving')
         resolve = WebDriverWait(self.browser, 30).until(
-            EC.element_to_be_clickable((By.XPATH, '//*[@id="com.atlassian.servicedesk:workflow-transition-761"]'))
+            ec.element_to_be_clickable((By.XPATH, '//*[@id="com.atlassian.servicedesk:workflow-transition-761"]'))
         )
         resolve.click()
-        WebDriverWait(self.browser, 30).until(EC.element_to_be_clickable((By.XPATH, '/html/body/section/form')))
+        WebDriverWait(self.browser, 30).until(ec.element_to_be_clickable((By.XPATH, '/html/body/section/form')))
         self.browser.find_elements(By.XPATH, '/html/body/section/form')[0].submit()
-        #print("Ticket resolved")
+        # print("Ticket resolved")
         self.update_progress()
 
     def assign_ticket(self):
-        #print('Opening ticket information')
+        # print('Opening ticket information')
         time.sleep(2)
         self.browser.find_elements(By.XPATH, '//*[@id="content"]/div/header/div/div/div[2]/div[2]/div/ol/li[3]/a')[
             0].click()
         self.update_progress()
         # Wait until the assign-to-me button is clickable
         assign_button = WebDriverWait(self.browser, 30).until(
-            EC.element_to_be_clickable((By.XPATH, '//*[@id="assign-to-me"]'))
+            ec.element_to_be_clickable((By.XPATH, '//*[@id="assign-to-me"]'))
         )
         assign_button.click()
         self.update_progress()
-        #print('Assigned to me')
+        # print('Assigned to me')
 
     def close_ticket(self):
-        #print('Closing ticket')
+        # print('Closing ticket')
         time.sleep(20)
         transition_bar = WebDriverWait(self.browser, 30).until(
-            EC.element_to_be_clickable((By.XPATH, '//*[@id="opsbar-transitions_more"]/span')))
+            ec.element_to_be_clickable((By.XPATH, '//*[@id="opsbar-transitions_more"]/span')))
         transition_bar.click()
         self.update_progress()
         close_button = WebDriverWait(self.browser, 30).until(
-            EC.element_to_be_clickable((By.XPATH, '//*[@id="action_id_941"]/a/div/div[1]'))
+            ec.element_to_be_clickable((By.XPATH, '//*[@id="action_id_941"]/a/div/div[1]'))
         )
         close_button.click()
         time.sleep(10)
         self.update_progress()
-        #print('Ticket closed successfully.')
+        # print('Ticket closed successfully.')
 
     def run(self):
         self.open_landing_page()

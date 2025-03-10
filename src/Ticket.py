@@ -43,4 +43,3 @@ class Ticket:
         date_string_cleaned = re.sub(r'(\d+)(st|nd|rd|th)', r'\1', date_string)
         date_format = "%A, %B %d %Y, %I:%M %p"
         return datetime.datetime.strptime(date_string_cleaned, date_format)
-

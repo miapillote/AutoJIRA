@@ -1,13 +1,10 @@
 import tkinter as tk
 import time
-from tkinter import messagebox
-from selenium import webdriver
-from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
 
 
 class LoginForm:
-    def __init__(self, root, browser):  #include browser session
+    def __init__(self, root, browser):  # include browser session
         self.browser = browser
         self.root = root
         self.root.title("Login Form")
@@ -36,7 +33,7 @@ class LoginForm:
     def on_login(self):
         username = self.entry_username.get()
         password = self.entry_password.get()
-        #print("on_login -> attempt_login")
+        # print("on_login -> attempt_login")
         self.attempt_login(username, password, self.browser)
 
     def attempt_login(self, username, password, driver):

@@ -1,6 +1,6 @@
 import tkinter as tk
 from tkinter import messagebox, filedialog, ttk
-import JiraFormAutomation as jira
+import JiraFormAutomation as Jira
 from tkcalendar import Calendar
 from datetime import datetime
 import os
@@ -43,7 +43,7 @@ def submit_form():
 
     # TODO: give error message when the automation fails
     clear_fields()
-    automation = jira.JiraFormAutomation(ticket, root, progress_bar, progress)
+    automation = Jira.JiraFormAutomation(ticket, root, progress_bar, progress)
     messagebox.showinfo(automation.run())
     return
 
