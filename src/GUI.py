@@ -5,6 +5,7 @@ from tkcalendar import Calendar
 from datetime import datetime
 import os
 import Ticket
+import CalendarTool
 
 
 def submit_form():
@@ -43,6 +44,9 @@ def submit_form():
 
     # TODO: give error message when the automation fails
     clear_fields()
+    # TODO: change calendar oath to Rettner account
+    # if calendar_checkbox_var:
+    #     CalendarTool.create_event(ticket)
     automation = Jira.JiraFormAutomation(ticket, root, progress_bar, progress)
     messagebox.showinfo(automation.run())
     return
@@ -111,14 +115,18 @@ tk.Radiobutton(left_frame, text="Loaned", variable=status_var, value="Loaned").g
                                                                                     sticky="w")
 tk.Radiobutton(left_frame, text="Returned", variable=status_var, value="Returned").grid(row=9, column=0, padx=20,
                                                                                         pady=5, sticky="w")
-
 # Items List
 tk.Label(left_frame, text="Items:").grid(row=10, column=0, padx=20, pady=5, sticky="w")
 items_text = tk.Text(left_frame, height=5, width=40)  # Adjust width to make it less wide
 items_text.grid(row=11, column=0, padx=20, pady=5, sticky="w")
 
 # Submit Button
-tk.Button(left_frame, text="Submit", command=submit_form).grid(row=12, column=0, padx=20, pady=10, sticky="w")
+tk.Button(root, text="Submit", command=submit_form).grid(row=12, column=0, padx=20, pady=10, sticky="w")
+
+# Calendar Event Checkbox
+calendar_checkbox_var = tk.IntVar()
+calendar_checkbox = tk.Checkbutton(root, text="Create Calendar Event", variable=calendar_checkbox_var, onvalue=1, offvalue=0)
+calendar_checkbox.grid(row=12, column=0, padx=20, pady=10, sticky="e")
 
 # Progress Bar
 progress = tk.DoubleVar()
