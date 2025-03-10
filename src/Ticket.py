@@ -23,6 +23,7 @@ class Ticket:
         reader = PdfReader(pdf)
         page = reader.pages[0]
         text = page.extract_text(0)
+        self.action = "Loaned"
         self.name = self.read_name(re.findall(r"NAME:\s*(.*?)(?=\s*NETID:)", text)[0])
         self.netid = re.findall(r"NETID:\s*(\S+)", text)[0]
         self.item = re.findall(r"ITEM:\s*(.*?)(?=\s*DUE:)", text)[0]
