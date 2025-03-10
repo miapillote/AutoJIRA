@@ -13,6 +13,10 @@ class Ticket:
         self.due = None
         self.email = None
         self.action = None
+        self.file_path = None
+        self.id = None
+        self.calendar_event = True
+        self.jira_ticket = True
 
     def manual_input(self, name, item, date, action):
         self.action = action
@@ -23,6 +27,7 @@ class Ticket:
         self.due = self.due.replace(hour=10, minute=0, second=0, microsecond=0)
 
     def read_form(self, pdf):
+        self.file_path = pdf
         reader = PdfReader(pdf)
         page = reader.pages[0]
         text = page.extract_text(0)
