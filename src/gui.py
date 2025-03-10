@@ -14,55 +14,38 @@ def submit_form():
 
     # Initialize ticket
     ticket = Ticket.Ticket()
-
-    # Retrieve data
-    first_name = first_name_entry.get()
-    last_name = last_name_entry.get()
-    status = status_var.get()
-    items = items_text.get("1.0", tk.END).strip()
-    selected_date_str = date_picker.get_date()  # Get the selected date as a string
     file_path = file_path_var.get()  # Get the selected file path
 
     # If a file is selected, no other inputs are needed
     if file_path:
-        #print(f"File Selected: {file_path}")
         ticket.read_form(file_path)
-        # Clear fields
-        clear_fields()
 
-        # TODO: give error message when the automation fails
-        automation = jira.JiraFormAutomation(ticket, root, progress_bar, progress)
-        automation.run()
+    else:
+        first_name = first_name_entry.get()
+        last_name = last_name_entry.get()
+        status = status_var.get()
+        items = items_text.get("1.0", tk.END).strip()
+        selected_date_str = date_picker.get_date()  # Get the selected date as a string
 
-        messagebox.showinfo("Success", "Form submitted successfully with the file!")
-        return
+        # Validate other fields when no file is selected
+        if not first_name or not last_name or not items:
+            messagebox.showerror("Error", "All fields must be filled out.")
+            return
 
-    # Validate other fields when no file is selected
-    if not first_name or not last_name or not items:
-        messagebox.showerror("Error", "All fields must be filled out.")
-        return
+        # Convert the selected date string to a datetime object
+        try:
+            selected_date = datetime.strptime(selected_date_str,
+                                              "%m/%d/%y")  # Adjust the format as per the date pattern
+        except ValueError:
+            messagebox.showerror("Error", "Invalid date format.")
+            return
+        ticket.manual_input([first_name, last_name], items, selected_date, status)
 
-    # Convert the selected date string to a datetime object
-    try:
-        selected_date = datetime.strptime(selected_date_str, "%m/%d/%y")  # Adjust the format as per the date pattern
-    except ValueError:
-        messagebox.showerror("Error", "Invalid date format.")
-        return
-
-    # If a file is not selected, continue with form submission
-    """
-    print(f"First Name: {first_name}")
-    print(f"Last Name: {last_name}")
-    print(f"Status: {status}")
-    print(f"Items:\n{items}")
-    print(f"Selected Date: {selected_date}")
-    """
-
+    # TODO: give error message when the automation fails
     clear_fields()
-    ticket.manual_input([first_name, last_name], items, selected_date, status)
     automation = jira.JiraFormAutomation(ticket, root, progress_bar, progress)
-    automation.run()
-    messagebox.showinfo("Success", "Form submitted successfully!")
+    messagebox.showinfo(automation.run())
+    return
 
 
 def clear_fields():
@@ -93,7 +76,7 @@ def browse_file():
 
 # Create main window
 root = tk.Tk()
-root.title("Loan Tracker")
+root.title("AutoJIRA")
 root.geometry("800x500")  # Increase the initial window size
 
 # Create a frame for left-side elements (form fields)

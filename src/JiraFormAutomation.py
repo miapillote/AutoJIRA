@@ -35,8 +35,9 @@ class JiraFormAutomation:
         # Wait for page load and check if login is required
         WebDriverWait(self.browser, 30).until(EC.url_contains("service.rochester.edu"))
         if "service.rochester.edu" not in self.browser.current_url:
-            Login.LoginForm(tk.Tk(), self.browser)
-            self.open_landing_page()
+            return "Could not reach landing page, try logging in."
+            # Login.LoginForm(tk.Tk(), self.browser)
+            # self.open_landing_page()
         self.update_progress()
 
     def fill_form(self):
@@ -114,19 +115,10 @@ class JiraFormAutomation:
         self.assign_ticket()
         self.close_ticket()
         self.browser.quit()
-        return True
+        return "Successfully submitted ticket."
 
     def update_progress(self):
         self.progress_int += 10
         self.progress.set(self.progress_int)
         self.progress_bar.update_idletasks()
         self.root.update_idletasks()
-
-
-if __name__ == "__main__":
-    customer = [sys.argv[1], sys.argv[2]]
-    action = sys.argv[3]
-    items = sys.argv[4:]
-
-    jira_automation = JiraFormAutomation(customer, action, items)
-    jira_automation.run()
