@@ -8,6 +8,9 @@ import Ticket
 import CalendarTool
 
 
+# TODO: create a separate thread for the automations so they don't lock up the ui
+# This would let the user queue multiple operations at once
+
 def submit_form():
     # Set up progress bar
     progress.set(0)
@@ -20,10 +23,9 @@ def submit_form():
     # If a file is selected, no other inputs are needed
     if file_path:
         ticket.read_form(file_path)
-
     else:
-        first_name = first_name_entry.get()
-        last_name = last_name_entry.get()
+        first_name = first_name_entry.get().strip()
+        last_name = last_name_entry.get().strip()
         status = status_var.get()
         items = items_text.get("1.0", tk.END).strip()
         selected_date_str = date_picker.get_date()  # Get the selected date as a string
@@ -44,11 +46,15 @@ def submit_form():
 
     # TODO: give error message when the automation fails
     clear_fields()
-    # TODO: change calendar oath to Rettner account
-    # if calendar_checkbox_var:
-    #     CalendarTool.create_event(ticket)
-    automation = Jira.JiraFormAutomation(ticket, root, progress_bar, progress)
-    messagebox.showinfo(automation.run())
+    # TODO: change calendar oauth to Rettner account
+    if calendar_checkbox_var.get():
+        CalendarTool.create_event(ticket)
+        messagebox.showinfo("Successfully created Google Calendar event.")
+    if jira_ticket_checkbox_var.get():
+        automation = Jira.JiraFormAutomation(ticket, root, progress_bar, progress)
+        messagebox.showinfo(automation.run())
+    if not (calendar_checkbox_var.get() or jira_ticket_checkbox_var.get()):
+        messagebox.showwarning("Select at least one action to continue.")
     return
 
 
@@ -123,9 +129,16 @@ items_text.grid(row=11, column=0, padx=20, pady=5, sticky="w")
 # Submit Button
 tk.Button(root, text="Submit", command=submit_form).grid(row=12, column=0, padx=20, pady=10, sticky="w")
 
+# Jira Ticket Checkbox
+jira_ticket_checkbox_var = tk.BooleanVar()
+jira_ticket_checkbox_var.set(True)
+jira_ticket_checkbox = tk.Checkbutton(root, text="Create JIRA Ticket", variable=jira_ticket_checkbox_var)
+jira_ticket_checkbox.grid(row=12, column=0, padx=20, pady=10)
+
 # Calendar Event Checkbox
-calendar_checkbox_var = tk.IntVar()
-calendar_checkbox = tk.Checkbutton(root, text="Create Calendar Event", variable=calendar_checkbox_var, onvalue=1, offvalue=0)
+calendar_checkbox_var = tk.BooleanVar()
+calendar_checkbox_var.set(False)
+calendar_checkbox = tk.Checkbutton(root, text="Create Calendar Event", variable=calendar_checkbox_var)
 calendar_checkbox.grid(row=12, column=0, padx=20, pady=10, sticky="e")
 
 # Progress Bar

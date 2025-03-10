@@ -1,12 +1,6 @@
 """
 
-The idea for this is for the user to be able to prompt the application to create and share a Google Calendar invite
-with the customer. This would, ideally, help people remember to return things on time and keep the library running
-smoothly.
-
-https://karenapp.io/articles/how-to-automate-google-calendar-with-python-using-the-calendar-api/
-
-I need to switch the project to a different account, so I can add rettnerhelpdesk as a test user...?
+TODO: add a link to the form they signed, if available
 
 """
 import Ticket
@@ -24,7 +18,7 @@ PICKLE = '../resources/secrets/token.pickle'
 # Event parameter constants
 TIMEZONE = "America/New_York"
 LOCATION = "Rettner Hall Room 201"
-CALENDAR_ID = "primary"
+CALENDAR_ID = "062010d99253329019c986e3f5d062cf3ae57abc074bfea1328d008158c602ed@group.calendar.google.com"
 
 
 def create_event(ticket: Ticket):
