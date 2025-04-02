@@ -82,6 +82,8 @@ class JiraFormAutomation:
     def assign_ticket(self):
         # print('Opening ticket information')
         time.sleep(2)
+        # TODO: add in error handling in case the menu is already toggled open
+        self.browser.find_element(By.XPATH, '//*[@id="peoplemodule"]')
         self.browser.find_elements(By.XPATH, '//*[@id="content"]/div/header/div/div/div[2]/div[2]/div/ol/li[3]/a')[
             0].click()
         self.update_progress()
