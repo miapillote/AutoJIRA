@@ -62,41 +62,51 @@ class JiraFormAutomation:
 
         summary_element[0].send_keys(self.action, ": ", self.items)
         summary_element[0].send_keys(Keys.RETURN)
-        # print("Form filled")
+        print("Form filled")
         self.update_progress()
 
         # Wait for form submission and completion
         WebDriverWait(self.browser, 30).until(ec.invisibility_of_element_located((By.XPATH, '//*[@id="summary"]')))
 
     def resolve_ticket(self):
-        # print('Resolving')
+        print('Resolving')
         resolve = WebDriverWait(self.browser, 30).until(
             ec.element_to_be_clickable((By.XPATH, '//*[@id="com.atlassian.servicedesk:workflow-transition-761"]'))
         )
         resolve.click()
         WebDriverWait(self.browser, 30).until(ec.element_to_be_clickable((By.XPATH, '/html/body/section/form')))
         self.browser.find_elements(By.XPATH, '/html/body/section/form')[0].submit()
-        # print("Ticket resolved")
+        print("Ticket resolved")
         self.update_progress()
 
     def assign_ticket(self):
-        # print('Opening ticket information')
+        print('Opening ticket information')
         time.sleep(2)
         # TODO: add in error handling in case the menu is already toggled open
-        self.browser.find_element(By.XPATH, '//*[@id="peoplemodule"]')
         self.browser.find_elements(By.XPATH, '//*[@id="content"]/div/header/div/div/div[2]/div[2]/div/ol/li[3]/a')[
             0].click()
         self.update_progress()
-        # Wait until the assign-to-me button is clickable
-        assign_button = WebDriverWait(self.browser, 30).until(
-            ec.element_to_be_clickable((By.XPATH, '//*[@id="assign-to-me"]'))
-        )
-        assign_button.click()
+        
+        # try to click the "assign to me" button
+        try:
+            print("attempting to find \"assign to me\"")
+            assign_button = WebDriverWait(self.browser, 30).until(ec.element_to_be_clickable((By.XPATH, '//*[@id="assign-to-me"]')))
+        except:
+            print("could not find \"assign to me\" button, expanding the \"people\" bar.")
+            expand_people_dropdown = WebDriverWait(self.browser, 10).until(
+                ec.element_to_be_clickable((By.XPATH, '//*[@id="peoplemodule-label"]/button/span')))
+            expand_people_dropdown.click()
+            print("\"people\" bar expanded")
+        finally:
+            print("clicking \"assign to me\"")
+            assign_button = WebDriverWait(self.browser, 30).until(ec.element_to_be_clickable((By.XPATH, '//*[@id="assign-to-me"]')))
+        
+        print("clicked assign button")
         self.update_progress()
-        # print('Assigned to me')
+        print('Assigned to me')
 
     def close_ticket(self):
-        # print('Closing ticket')
+        print('Closing ticket')
         time.sleep(20)
         transition_bar = WebDriverWait(self.browser, 30).until(
             ec.element_to_be_clickable((By.XPATH, '//*[@id="opsbar-transitions_more"]/span')))
@@ -108,7 +118,7 @@ class JiraFormAutomation:
         close_button.click()
         time.sleep(10)
         self.update_progress()
-        # print('Ticket closed successfully.')
+        print('Ticket closed successfully.')
 
     def run(self):
         self.open_landing_page()
