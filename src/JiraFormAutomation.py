@@ -6,6 +6,8 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as ec
 
+TESTING_MODE = True
+
 LANDING = "https://service.rochester.edu/servicedesk/customer/portal/101/create/358?q=lending&q_time=1693601714516"
 CHROME_PATH = r'--user-data-dir=C:/Users/rettnerhelpdesk/AppData/Local/Google/Chrome'
 CHROME_PROFILE = '--profile-directory=Profile 4'
@@ -26,7 +28,8 @@ class JiraFormAutomation:
         self.options = webdriver.ChromeOptions()
         self.options.add_argument(CHROME_PATH)
         self.options.add_argument(CHROME_PROFILE)
-        #self.options.add_argument('--headless')
+        if not TESTING_MODE:
+            self.options.add_argument('--headless')
         self.browser = webdriver.Chrome(options=self.options)
 
     def open_landing_page(self):
@@ -63,6 +66,11 @@ class JiraFormAutomation:
         source_element[0].send_keys(Keys.RETURN)
         description_element[0].send_keys(SIGNATURE)
         summary_element[0].send_keys(self.action, ": ", self.items)
+        
+        if TESTING_MODE:
+            time.sleep(30)
+            return
+        
         summary_element[0].send_keys(Keys.RETURN)
         
         print("Form filled")

@@ -26,12 +26,12 @@ class Ticket:
         self.due = date + timedelta(days=3)
         self.due = self.due.replace(hour=10, minute=0, second=0, microsecond=0)
 
-    def read_form(self, pdf):
+    def read_form(self, pdf, action):
         self.file_path = pdf
         reader = PdfReader(pdf)
         page = reader.pages[0]
         text = page.extract_text(0)
-        self.action = "Loaned"
+        self.action = action
         self.name = self.read_name(re.findall(r"NAME:\s*(.*?)(?=\s*NETID:)", text)[0])
         self.netid = re.findall(r"NETID:\s*(\S+)", text)[0]
         self.item = re.findall(r"ITEM:\s*(.*?)(?=\s*DUE:)", text)[0]
