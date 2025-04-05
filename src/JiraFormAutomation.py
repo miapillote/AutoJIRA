@@ -147,7 +147,12 @@ class JiraFormAutomation:
             return failure_message
 
     def update_progress(self):
-        self.progress_int += 10
-        self.progress.set(self.progress_int)
-        self.progress_bar.update_idletasks()
-        self.root.update_idletasks()
+        if self.root is not None:
+            self.progress_int += 10
+            self.progress.set(self.progress_int)
+            self.progress_bar.update_idletasks()
+            self.root.update_idletasks()
+        else:
+            self.progress_int += 10
+            #TODO: command line progress bar here
+            

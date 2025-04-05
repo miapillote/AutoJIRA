@@ -38,6 +38,15 @@ class Ticket:
         self.date = self.read_date(re.findall(r"OUT:\s*(.*?)(?=\s*CONDITION)", text)[0])
         self.due = self.read_date(re.findall(r"DUE:\s*(.*?)(?=\s*NAME:)", text)[0])
         self.email = re.findall(r"EMAIL:\s*(.*?)(?=\s*ATTENDANT)", text)[0]
+        
+    def read_clipboard(self, text):
+        self.action = "Loaned"
+        self.name = self.read_name(re.findall(r"NAME:\s*(.*?)(?=\s*NETID:)", text)[0])
+        self.netid = re.findall(r"NETID:\s*(\S+)", text)[0]
+        self.item = re.findall(r"ITEM:\s*(.*?)(?=\s*DUE:)", text)[0]
+        self.date = self.read_date(re.findall(r"OUT:\s*(.*?)(?=\s*CONDITION)", text)[0])
+        self.due = self.read_date(re.findall(r"DUE:\s*(.*?)(?=\s*NAME:)", text)[0])
+        self.email = re.findall(r"EMAIL:\s*(.*?)(?=\s*ATTENDANT)", text)[0]
 
     @staticmethod
     def read_name(full_name):
@@ -50,7 +59,17 @@ class Ticket:
     def read_date(date_string):
         date_string_cleaned = re.sub(r'(\d+)(st|nd|rd|th)', r'\1', date_string)
         date_format = "%A, %B %d %Y, %I:%M %p"
+        print(date_string_cleaned)
         return datetime.datetime.strptime(date_string_cleaned, date_format)
+        
+    def print_ticket(self):
+        print("Action: ", self.action)
+        print("Name: ", self.name)
+        print("NetID: ", self.netid)
+        print("Item: ", self.item)
+        print("Date: ", self.date)
+        print("Due date: ", self.due)
+        print("Email: ", self.email)
 
 
 def test():
