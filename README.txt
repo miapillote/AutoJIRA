@@ -1,20 +1,26 @@
-To setup on the Rettner machine:
+Welcome to AutoJIRA for the Rettner Helpdesk!
 
-- Clone into an easily accessible directory in on the desktop (ideally the one I made called "startup" (? I think ?)
-- Replace my path to chrome with the Rettner path to Chrome (JiraFormAutomation ln 13)
-- Add powershell script in the "startup" folder:
-	- probably located at "C:\ProgramData\Microsoft\Windows\Start Menu\Programs\Startup" or something
-	- restart the machine and see if it starts up
-	- script should be: py <path-to-gui.py>
+This application uses Selenium to automate the task of creating and submitting JIRA tickets for equipment rentals and returns, a process that used to take about two minutes per ticket. The manual process is inconsistent, and compliance among employees is poor. This tool reduces the active work associated with submitting IT tickets to the time it takes you to fill out the basic information needed--in my experience, about 20 seconds. That's an 83% time reduction in time spent on IT tickets. Nice!
 
-- Important things to note while I add features and bug fixes:
-	- It won't always find the right customer if you spell the name wrong, so be careful
-	- Don't close the gui window
-	- If you do, reopen it on the command line with py <path-to-gui.py>
-	- You can use this from the command line as well by calling py <path-to-JiraFormAutomation.py> -first -last -action -item1 -item... -itemi
+Key Features:
+- Automated JIRA ticket creation, assignment, and resolution
+- Automated rental period invites for customers
+- Graphical user interface
+- Command line interface
 
-Upcoming features:
-	- logged out detection + login handling (in progress)
-	- google calendar invitation
-	- trigger from print form
-	- suggest returns
+Install:
+1. Clone this repository into a directory of your choice.
+2. Install the required dependencies*
+3. Run the following in a python terminal in the src directory:
+
+import CalendarTool
+CalendarTool.get_service()
+
+The command should redirect you to a Google consent form. Agree to sharing the requested data and close the window when prompted.
+
+Use:
+Graphical Interface:
+Run GUI.py. In the AutoJIRA window you may either manually input information or use a PDF form from LASSO. PDFs are the preferred source of information, as they are least likely to contain typos.
+
+Command Line Interface:
+Please reference the Documentation for a detailed guide.
