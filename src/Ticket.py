@@ -39,8 +39,8 @@ class Ticket:
         self.due = self.read_date(re.findall(r"DUE:\s*(.*?)(?=\s*NAME:)", text)[0])
         self.email = re.findall(r"EMAIL:\s*(.*?)(?=\s*ATTENDANT)", text)[0]
         
-    def read_clipboard(self, text):
-        self.action = "Loaned"
+    def read_clipboard(self, text, action):
+        self.action = action
         self.name = self.read_name(re.findall(r"NAME:\s*(.*?)(?=\s*NETID:)", text)[0])
         self.netid = re.findall(r"NETID:\s*(\S+)", text)[0]
         self.item = re.findall(r"ITEM:\s*(.*?)(?=\s*DUE:)", text)[0]

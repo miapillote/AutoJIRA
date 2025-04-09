@@ -19,6 +19,17 @@ PICKLE = '../resources/secrets/token.pickle'
 TIMEZONE = "America/New_York"
 LOCATION = "Rettner Hall Room 201"
 CALENDAR_ID = "062010d99253329019c986e3f5d062cf3ae57abc074bfea1328d008158c602ed@group.calendar.google.com"
+DESCRIPTION = """
+You are about to check out a very expensive piece(s) of electronic equipment from AS&E IT. If you fail to abide by the rules below, your borrowing privileges may be revoked and you may be liable for the full replacement cost. You will be asked to sign an agreement regarding the condition of the item(s) upon return.
+
+1. I will assume full responsibility for the equipment I am checking out.
+2. I will not let anyone else use the equipment while it is checked out to me.
+3. I will not leave said item(s) unattended. I will always put the item(s) in a safe place when not in use.
+4. When not in use I will always carry the item(s) in its provided bag.
+5. I will return the item(s) in the same condition as when it/they were checked out to me. If any damage or loss occurs while checked out to me, I will be responsible for the full repair or replacement costs.
+6. I will personally return the item(s) before the designated date and time below. Strikes, which expire after 6 months, will be issued for lateness or damage. Bans can be issued for severe violations. An accumulation of 3 strikes will result in a temporary ban. Up to 6 hours late will constitute 1 strike and additional strike(s) will be issued for each subsequent 6 hour period.
+7. For loaner laptops, personal data may not be preserved, and will be purged on restart. The data in the Saved Data folder will be saved, and you are responsible for deleting it before returning the computer.
+"""
 
 
 def create_event(ticket: Ticket):
@@ -27,6 +38,7 @@ def create_event(ticket: Ticket):
     event = {
         'summary': ticket.item + " Rental",
         'location': LOCATION,
+        'description': DESCRIPTION,
         'start': {
             'dateTime': ticket.date.isoformat(),
             'timeZone': TIMEZONE},
@@ -37,7 +49,7 @@ def create_event(ticket: Ticket):
     }
 
     event_result = service.events().insert(calendarId=CALENDAR_ID, body=event).execute()
-    return event_result
+    return event_result.get('htmlLink'))
 
 
 def get_calendar_service():
