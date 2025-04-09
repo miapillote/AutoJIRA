@@ -7,6 +7,7 @@ Key Features:
 - Automated rental period invites for customers
 - Graphical user interface
 - Command line interface
+- A hotkey binding for browser integration
 
 Install:
 1. Clone this repository into a directory of your choice.
@@ -24,3 +25,6 @@ Run GUI.py. In the AutoJIRA window you may either manually input information or 
 
 Command Line Interface:
 Please reference the Documentation for a detailed guide.
+
+Hotkey Binding:
+Add a shortcut to HotkeyBind.py to the Windows startup folder, then restart your machine. After printing a LASSO form, type ctrl+shift+L. This will create and share a calendar event and submit a ticket for the action.
