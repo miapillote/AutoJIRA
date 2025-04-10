@@ -49,7 +49,7 @@ def create_event(ticket: Ticket):
     }
 
     event_result = service.events().insert(calendarId=CALENDAR_ID, body=event).execute()
-    return event_result.get('htmlLink'))
+    return event_result.get('htmlLink')
 
 
 def get_calendar_service():
