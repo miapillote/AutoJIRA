@@ -6,6 +6,15 @@ import JiraFormAutomation as Jira
 import time
 import CalendarTool
 
+WELCOME = """
+
+Welcome to the Jira Hotkey Console. Keep this open to track the tickets submitted for today.
+Instructions:
+- To submit a "Loaned" ticket, navigate to the Lasso loaner form and type ctrl+shift+L
+- To submit a "Returned" ticket, navigate to the Lasso loaner form and type ctrl+shift+;
+
+"""
+
 def on_hotkey(action):
     #copy whatever's on the clipboard first so it doesn't get tossed
     clipboard_buffer = pyperclip.paste()
@@ -50,6 +59,9 @@ def on_hotkey(action):
         automation.run()
     except:
         print("Ticket close failed.")
+    
+    
+    print(WELCOME)
 
 def on_loan_hotkey():
     on_hotkey("Loaned")
@@ -59,5 +71,7 @@ def on_return_hotkey():
 
 keyboard.add_hotkey('ctrl+shift+l', on_loan_hotkey)
 keyboard.add_hotkey('ctrl+shift+;', on_return_hotkey)
+
+print(WELCOME)
 
 keyboard.wait() # Keep the script running to listen for hotkeys
