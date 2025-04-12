@@ -79,6 +79,6 @@ def get_calendar_service():
 
 def test():
     ticket = Ticket.Ticket()
-    ticket.read_form("../resources/forms/mpillote.pdf")
+    ticket.read_form("../resources/forms/mpillote.pdf", "Returned")
     event = create_event(ticket)
     return event
