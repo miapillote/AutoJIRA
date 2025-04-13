@@ -3,3 +3,6 @@
 SubmitTicket.py
 *.pyc
 ./Forms/*
+../resources/forms/*
+../resources/secrets
+..resources/tickets.db
