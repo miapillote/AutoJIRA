@@ -3,3 +3,4 @@
 SubmitTicket.py
 *.pyc
 ./Forms/*
+local.py
