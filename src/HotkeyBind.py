@@ -5,6 +5,9 @@ import Ticket
 import JiraFormAutomation as Jira
 import time
 import CalendarTool
+import queue
+import threading
+from selenium import webdriver
 
 WELCOME = """
 
@@ -15,7 +18,51 @@ Instructions:
 
 """
 
+CHROME_PATH = r'--user-data-dir=C:/Users/rettnerhelpdesk/AppData/Local/Google/Chrome'
+CHROME_PROFILE = '--profile-directory=Profile 4'
+
+def worker():
+    print("[Worker] Starting worker thread...")
+    
+    # Shared browser instance
+    options = webdriver.ChromeOptions()
+    options.add_argument(CHROME_PATH)
+    options.add_argument(CHROME_PROFILE)
+    options.add_argument('--headless')
+    browser = webdriver.Chrome(options=options)
+    
+    while True:
+        ticket = ticket_queue.get()
+        if ticket is None:
+            break
+        print("[Worker] Processing new ticket...")
+        
+        try:
+            if action == "Loaned":
+                CalendarTool.create_event(ticket)
+                print("Created calendar event for ", ticket.netid, " ", ticket.action, " ", ticket.item, ".")
+        except:
+            print("Failed to create calendar event.")
+            
+        try:
+            automation = Jira.JiraFormAutomation(ticket, None, None, 0, browser)
+            automation.run()
+            print("[Worker] Ticket automation done.")
+        except Exception as e:
+            print("[Worker] Error during automation:", e)
+
+        ticket_queue.task_done()
+
+    # Clean up after thread is done
+    print("[Worker] Shutting down browser...")
+    browser.quit()
+
+ticket_queue = queue.Queue()
+worker_thread = threading.Thread(target=worker, daemon=True)
+worker_thread.start()
+
 def on_hotkey(action):
+    print(f"\"{action}\" ticket requested, queuing task...")
     #copy whatever's on the clipboard first so it doesn't get tossed
     clipboard_buffer = pyperclip.paste()
     
@@ -46,9 +93,14 @@ def on_hotkey(action):
 
     ticket.print_ticket()
     
+    ticket_queue.put(ticket)
+    
+    """
+    
     try:
-        CalendarTool.create_event(ticket)
-        print("Created calendar event for ", ticket.netid, " ", ticket.action, " ", ticket.item, ".")
+        if action == "Loaned":
+            CalendarTool.create_event(ticket)
+            print("Created calendar event for ", ticket.netid, " ", ticket.action, " ", ticket.item, ".")
     except:
         print("Failed to create calendar event.")
         
@@ -59,9 +111,7 @@ def on_hotkey(action):
         automation.run()
     except:
         print("Ticket close failed.")
-    
-    
-    print(WELCOME)
+    """
 
 def on_loan_hotkey():
     on_hotkey("Loaned")

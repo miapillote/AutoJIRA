@@ -53,7 +53,12 @@ def submit_form():
         CalendarTool.create_event(ticket)
         messagebox.showinfo("Successfully created Google Calendar event.")
     if jira_ticket_checkbox_var.get():
-        automation = Jira.JiraFormAutomation(ticket, root, progress_bar, progress)
+        options = webdriver.ChromeOptions()
+        options.add_argument(CHROME_PATH)
+        options.add_argument(CHROME_PROFILE)
+        options.add_argument('--headless')
+        browser = webdriver.Chrome(options=options)
+        automation = Jira.JiraFormAutomation(ticket, root, progress_bar, progress, browser)
         messagebox.showinfo(automation.run())
     if not (calendar_checkbox_var.get() or jira_ticket_checkbox_var.get()):
         messagebox.showwarning("Select at least one action to continue.")
