@@ -2,7 +2,7 @@
 *.swp
 SubmitTicket.py
 *.pyc
-./Forms/*
-../resources/forms/*
-../resources/secrets
-..resources/tickets.db
+resources/forms/*
+resources/secrets
+resources/tickets.db
+.idea/
