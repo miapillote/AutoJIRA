@@ -21,6 +21,8 @@ Instructions:
 CHROME_PATH = r'--user-data-dir=C:/Users/rettnerhelpdesk/AppData/Local/Google/Chrome'
 CHROME_PROFILE = '--profile-directory=Profile 4'
 
+print(WELCOME)
+
 def worker():
     print("[Worker] Starting worker thread...")
     
@@ -38,7 +40,7 @@ def worker():
         print("[Worker] Processing new ticket...")
         
         try:
-            if action == "Loaned":
+            if (action == "Loaned"):
                 CalendarTool.create_event(ticket)
                 print("Created calendar event for ", ticket.netid, " ", ticket.action, " ", ticket.item, ".")
         except:
@@ -82,36 +84,18 @@ def on_hotkey(action):
     
     ticket = Ticket.Ticket()
     
+    #restore clipboard
+    pyperclip.copy(clipboard_buffer)
+    
     try:
         ticket.read_clipboard(copied_text, action)
     except:
         print("Parsing failed, Loaner Form page not detected.")
         return
 
-    #restore clipboard
-    pyperclip.copy(clipboard_buffer)
-
     ticket.print_ticket()
     
     ticket_queue.put(ticket)
-    
-    """
-    
-    try:
-        if action == "Loaned":
-            CalendarTool.create_event(ticket)
-            print("Created calendar event for ", ticket.netid, " ", ticket.action, " ", ticket.item, ".")
-    except:
-        print("Failed to create calendar event.")
-        
-    progress = 0
-    automation = Jira.JiraFormAutomation(ticket, None, None, progress)
-    
-    try:
-        automation.run()
-    except:
-        print("Ticket close failed.")
-    """
 
 def on_loan_hotkey():
     on_hotkey("Loaned")
@@ -121,7 +105,4 @@ def on_return_hotkey():
 
 keyboard.add_hotkey('ctrl+shift+l', on_loan_hotkey)
 keyboard.add_hotkey('ctrl+shift+;', on_return_hotkey)
-
-print(WELCOME)
-
 keyboard.wait() # Keep the script running to listen for hotkeys
