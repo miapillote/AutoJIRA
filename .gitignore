@@ -1,6 +1,5 @@
 ./__pycache__
 *.swp
-SubmitTicket.py
 *.pyc
 resources/forms/*
 resources/secrets/*

@@ -1,0 +1,23 @@
+---
+XPATH:
+- customer: '//*[@id="react-select-2-input"]'
+- source: '//*[@id="react-select-customfield_10808-instance-input"]'
+- summary: '//*[@id="summary"]'
+- description: '//*[@id="ak-editor-textarea"]'
+- resolve: '//*[@id="com.atlassian.servicedesk:workflow-transition-761"]'
+- confirmResolution: '/html/body/section/form'
+- ticketInfo: '//*[@id="content"]/div/header/div/div/div[2]/div[2]/div/ol/li[3]/a'
+- assign: '//*[@id="assign-to-me"]'
+- people: '//*[@id="peoplemodule-label"]/button/span'
+- transitionBar: '//*[@id="opsbar-transitions_more"]/span'
+- close: '//*[@id="action_id_941"]/a/div/div[1]'
+
+---
+URL:
+- landing: "https://service.rochester.edu/servicedesk/customer/portal/101/create/358?q=lending&q_time=1693601714516"
+- service: "service.rochester.edu"
+
+---
+PATH:
+- chrome: r'--user-data-dir=C:/Users/rettnerhelpdesk/AppData/Local/Google/Chrome'
+- profile: '--profile-directory=Profile 4'
