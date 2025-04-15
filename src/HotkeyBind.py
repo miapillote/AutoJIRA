@@ -39,12 +39,12 @@ def worker():
             break
         print("[Worker] Processing new ticket...")
         
-        try:
-            if (action == "Loaned"):
+        if ticket.action == "Loaned":
+            try:
                 CalendarTool.create_event(ticket)
-                print("Created calendar event for ", ticket.netid, " ", ticket.action, " ", ticket.item, ".")
-        except:
-            print("Failed to create calendar event.")
+                print("[Worker] Created calendar event for ", ticket.netid, " ", ticket.action, " ", ticket.item, ".")
+            except:
+                print("[Worker] Failed to create calendar event.")
             
         try:
             automation = Jira.JiraFormAutomation(ticket, None, None, 0, browser)
