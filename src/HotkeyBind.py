@@ -39,6 +39,8 @@ def worker():
             break
         print("[Worker] Processing new ticket...")
         
+        start_timer = time.perf_counter()
+        
         if ticket.action == "Loaned":
             try:
                 CalendarTool.create_event(ticket)
@@ -48,11 +50,12 @@ def worker():
             
         try:
             automation = Jira.JiraFormAutomation(ticket, None, None, 0, browser)
-            automation.run()
-            print("[Worker] Ticket automation done.")
+            automation.run()        
+            stop_timer = time.perf_counter()
+            print(f"[Worker] Ticket automation done. Time elapsed: {end_timer - start_timer:0.4f}s.")
         except Exception as e:
             print("[Worker] Error during automation:", e)
-
+        
         ticket_queue.task_done()
 
     # Clean up after thread is done

@@ -1,5 +1,6 @@
 import Ticket
 import time
+import yaml
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
@@ -127,7 +128,9 @@ class JiraFormAutomation:
             ec.element_to_be_clickable((By.XPATH, '//*[@id="action_id_941"]/a/div/div[1]'))
         )
         close_button.click()
-        time.sleep(10)
+        
+        WebDriverWait(self.browser, 30).until(ec.element_to_be_clickable((By.XPATH, '//*[@id="opsbar-transitions_more"]/span')))
+        #time.sleep(10)
         self.update_progress()
         self.update('Ticket closed successfully.')
 
