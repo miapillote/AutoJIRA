@@ -5,12 +5,14 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as ec
 from Variables import URL, TEXT, XPATH
+import logging
 
 TESTING_MODE = False
-
+logger = logging.getLogger(__name__)
 
 class JiraFormAutomation:
     def __init__(self, ticket: Ticket, root, progress_bar, progress, browser):
+        logging.basicConfig(filename='../resources/AutoJIRA.log', level=logging.INFO)
         if TESTING_MODE:
             self.update("Testing mode ON.")
         self.NUM_UPDATES = 11
@@ -25,7 +27,7 @@ class JiraFormAutomation:
         self.browser = browser
 
     def update(self, message):
-        print(f"[{self.ticket.netid}] {message}")
+        logger.info(f"[{self.ticket.netid} {self.ticket.items}] {message}")
 
     def wait(self, element):
         WebDriverWait(self.browser, 30).until(ec.element_to_be_clickable((By.XPATH, XPATH[element])))
