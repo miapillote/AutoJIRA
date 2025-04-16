@@ -27,6 +27,9 @@ class JiraFormAutomation:
     def update(self, message):
         print(f"[{self.ticket.netid}] {message}")
 
+    def wait(self, element):
+        WebDriverWait(self.browser, 30).until(ec.element_to_be_clickable((By.XPATH, XPATH[element])))
+
     def open_landing_page(self):
         self.browser.get(URL['landing'])
         self.update_progress()
