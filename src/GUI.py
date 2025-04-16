@@ -1,5 +1,6 @@
 import tkinter as tk
 from tkinter import messagebox, filedialog, ttk
+from selenium import webdriver
 import JiraFormAutomation as Jira
 from tkcalendar import Calendar
 from datetime import datetime
@@ -7,9 +8,11 @@ import os
 import Ticket
 import CalendarTool
 
-
 # TODO: create a separate thread for the automations so they don't lock up the ui
 # This would let the user queue multiple operations at once
+CHROME_PATH = r'--user-data-dir=C:/Users/rettnerhelpdesk/AppData/Local/Google/Chrome'
+CHROME_PROFILE = '--profile-directory=Profile 4'
+
 
 def submit_form():
     # Set up progress bar
@@ -94,6 +97,7 @@ def browse_file():
         file_path_var.set(file_path)
         file_label.config(text=os.path.basename(file_path))  # Update label with file name
 
+
 # Create main window
 root = tk.Tk()
 root.title("AutoJIRA")
@@ -132,9 +136,9 @@ status_var = tk.StringVar(value="Loaned")
 tk.Radiobutton(left_frame, text="Loaned", variable=status_var, value="Loaned").grid(row=8, column=0, padx=20, pady=5,
                                                                                     sticky="w")
 tk.Radiobutton(left_frame, text="Returned", variable=status_var, value="Returned").grid(row=9, column=0, padx=20,
-                                              
-                                              pady=5, sticky="w")
-                                              
+
+                                                                                        pady=5, sticky="w")
+
 """
 # Items List
 tk.Label(left_frame, text="Items:").grid(row=10, column=0, padx=20, pady=5, sticky="w")
@@ -151,13 +155,11 @@ jira_ticket_checkbox_var.set(True)
 jira_ticket_checkbox = tk.Checkbutton(root, text="Create JIRA Ticket", variable=jira_ticket_checkbox_var)
 jira_ticket_checkbox.grid(row=12, column=0, padx=20, pady=10)
 
-
 # Calendar Event Checkbox
 calendar_checkbox_var = tk.BooleanVar()
 calendar_checkbox_var.set(False)
 calendar_checkbox = tk.Checkbutton(root, text="Create Calendar Event", variable=calendar_checkbox_var)
 calendar_checkbox.grid(row=12, column=0, padx=20, pady=10, sticky="e")
-
 
 # Progress Bar
 progress = tk.DoubleVar()

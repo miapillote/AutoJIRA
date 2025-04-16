@@ -33,7 +33,7 @@ class Ticket:
         page = reader.pages[0]
         text = page.extract_text(0)
         self.read_clipboard(text, action)
-        
+
     def read_clipboard(self, text, action):
         self.action = action
         self.name = self.read_name(re.findall(r"NAME:\s*(.*?)(?=\s*NETID:)", text)[0])
@@ -51,7 +51,7 @@ class Ticket:
         first_name = full_name[0]
         last_name = " ".join(full_name[1:])
         return [first_name, last_name]
-        
+
     @staticmethod
     def generate_name_permutations(full_name):
         full_name = full_name.split()
@@ -60,16 +60,15 @@ class Ticket:
             first_name = " ".join([full_name[j] for j in range(i + 1)])
             last_name = " ".join([full_name[j] for j in range(i + 1, len(full_name))])
             permutations.append([first_name, last_name])
-        
+
         return permutations
 
     @staticmethod
     def read_date(date_string):
         date_string_cleaned = re.sub(r'(\d+)(st|nd|rd|th)', r'\1', date_string)
         date_format = "%A, %B %d %Y, %I:%M %p"
-        print(date_string_cleaned)
         return datetime.datetime.strptime(date_string_cleaned, date_format)
-        
+
     def print_ticket(self):
         print("Action: ", self.action)
         print("Name: ", self.name)
@@ -86,6 +85,7 @@ def test():
     print(ticket.date)
     print(ticket.due)
     return ticket
+
 
 def test_name_permutations():
     permutations = Ticket.generate_name_permutations('Jane Mary Linda Doe')
