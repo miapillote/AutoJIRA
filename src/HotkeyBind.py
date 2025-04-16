@@ -45,8 +45,8 @@ def worker():
             try:
                 CalendarTool.create_event(ticket)
                 print("[Worker] Created calendar event for ", ticket.netid, " ", ticket.action, " ", ticket.item, ".")
-            except:
-                print("[Worker] Failed to create calendar event.")
+            except Exception as e:
+                print(f"[Worker] Failed to create calendar event: {e}")
 
         try:
             automation = Jira.JiraFormAutomation(ticket, None, None, 0, browser)

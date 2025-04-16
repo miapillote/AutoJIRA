@@ -2,8 +2,6 @@ import tkinter as tk
 from tkinter import messagebox, filedialog, ttk
 from selenium import webdriver
 import JiraFormAutomation as Jira
-from tkcalendar import Calendar
-from datetime import datetime
 import os
 import Ticket
 import CalendarTool
