@@ -13,9 +13,7 @@ logger = logging.getLogger(__name__)
 class JiraFormAutomation:
     def __init__(self, ticket: Ticket, root, progress_bar, progress, browser):
         logging.basicConfig(filename='../resources/AutoJIRA.log', level=logging.INFO)
-        if TESTING_MODE:
-            self.update("Testing mode ON.")
-        self.NUM_UPDATES = 11
+        self.NUM_UPDATES = 21
         self.ticket = ticket
         self.progress_int = 0
         self.progress = progress
@@ -25,12 +23,15 @@ class JiraFormAutomation:
         self.action = ticket.action
         self.items = ticket.item
         self.browser = browser
+        if TESTING_MODE:
+            self.update("Testing mode ON.")
 
     def update(self, message):
-        logger.info(f"[{self.ticket.netid} {self.ticket.items}] {message}")
+        logger.info(f"[{self.ticket.netid} {self.items}] {message}")
 
     def wait(self, element):
-        WebDriverWait(self.browser, 30).until(ec.element_to_be_clickable((By.XPATH, XPATH[element])))
+        self.update(element)
+        return WebDriverWait(self.browser, 30).until(ec.element_to_be_clickable((By.XPATH, XPATH[element])))
 
     def open_landing_page(self):
         self.browser.get(URL['landing'])
@@ -59,8 +60,7 @@ class JiraFormAutomation:
         customer_element.send_keys(Keys.RETURN)
         self.update_progress()
 
-        WebDriverWait(self.browser, 30).until(
-            ec.element_to_be_clickable((By.XPATH, XPATH['source_element'])))
+        self.wait('source_element')
         source_element[0].send_keys('Walk In')
         source_element[0].send_keys(Keys.RETURN)
         description_element[0].send_keys(TEXT['ticket_signature'])
@@ -71,66 +71,39 @@ class JiraFormAutomation:
             return
 
         summary_element[0].send_keys(Keys.RETURN)
-
-        self.update("Form filled")
         self.update_progress()
 
         # Wait for form submission and completion
         WebDriverWait(self.browser, 30).until(ec.invisibility_of_element_located((By.XPATH, XPATH['summary_element'])))
 
     def resolve_ticket(self):
-        self.update('Resolving')
-        resolve = WebDriverWait(self.browser, 30).until(
-            ec.element_to_be_clickable((By.XPATH, XPATH['resolve_element']))
-        )
-        resolve.click()
-        WebDriverWait(self.browser, 30).until(ec.element_to_be_clickable((By.XPATH, XPATH['submit_element'])))
+        self.wait('resolve_element').click()
+        self.wait('submit_element')
         self.browser.find_elements(By.XPATH, XPATH['submit_element'])[0].submit()
-        self.update("Ticket resolved")
         self.update_progress()
 
     def assign_ticket(self):
-        self.update('Opening ticket information')
-        time.sleep(2)
         # TODO: add in error handling in case the menu is already toggled open
+        self.wait('open_ticket_element')
         self.browser.find_elements(By.XPATH, XPATH['open_ticket_element'])[0].click()
         self.update_progress()
 
         # try to click the "assign to me" button
         try:
-            self.update("attempting to find \"assign to me\"")
-            WebDriverWait(self.browser, 30).until(
-                ec.element_to_be_clickable((By.XPATH, XPATH['assign_to_me_element']))).click()
+            self.wait('assign_to_me_element').click()
         except:
-            self.update("could not find \"assign to me\" button, expanding the \"people\" bar.")
-            expand_people_dropdown = WebDriverWait(self.browser, 10).until(
-                ec.element_to_be_clickable((By.XPATH, XPATH['people_dropdown_element'])))
-            expand_people_dropdown.click()
-            self.update("\"people\" bar expanded")
-            self.update("clicking \"assign to me\"")
-            WebDriverWait(self.browser, 30).until(
-                ec.element_to_be_clickable((By.XPATH, XPATH['assign_to_me_element']))).click()
+            self.wait('people_dropdown_element').click()
+            self.wait('assign_to_me_element').click()
 
-        self.update("clicked assign button")
         self.update_progress()
-        self.update('Assigned to me')
 
     def close_ticket(self):
-        self.update('Closing ticket')
-        time.sleep(20)
-        transition_bar = WebDriverWait(self.browser, 30).until(
-            ec.element_to_be_clickable((By.XPATH, XPATH['transition_bar_element'])))
-        transition_bar.click()
+        WebDriverWait(self.browser, 30).until(ec.invisibility_of_element((By.CLASS_NAME, 'aui-blanket')))
+        self.wait('transition_bar_element').click()
         self.update_progress()
-        close_button = WebDriverWait(self.browser, 30).until(
-            ec.element_to_be_clickable((By.XPATH, XPATH['close_button_element']))
-        )
-        close_button.click()
-
-        WebDriverWait(self.browser, 30).until(
-            ec.element_to_be_clickable((By.XPATH, XPATH['transition_bar_element'])))
+        self.wait('close_button_element').click()
+        self.wait('transition_bar_element')
         self.update_progress()
-        self.update('Ticket closed successfully.')
 
     def run(self):
         try:
@@ -139,6 +112,7 @@ class JiraFormAutomation:
             self.resolve_ticket()
             self.assign_ticket()
             self.close_ticket()
+            self.update(f"Ticket submission success: {self.browser.current_url}")
             return "Successfully submitted ticket."
         except Exception as e:
             self.update(f"Ticket submission failed: {e}")
