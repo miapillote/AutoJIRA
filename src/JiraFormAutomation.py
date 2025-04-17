@@ -8,7 +8,7 @@ from Variables import URL, TEXT, XPATH
 import logging
 import getpass
 
-TESTING_MODE = True
+TESTING_MODE = False
 logger = logging.getLogger(__name__)
 
 
@@ -51,8 +51,10 @@ class JiraFormAutomation:
                 password = getpass.getpass("Password: ")
                 self.browser.find_elements(By.XPATH, '//*[@id="usernamevis"]')[0].send_keys(username)
                 self.browser.find_elements(By.XPATH, '//*[@id="password"]')[0].send_keys(password, Keys.RETURN)
+                time.sleep(2)
             else:
                 break
+        print("Authentication successful.")
         self.update_progress()
 
     def fill_form(self):
