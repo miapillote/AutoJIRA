@@ -4,4 +4,5 @@
 resources/forms/*
 resources/secrets/*
 resources/tickets.db
+resources/AutoJIRA.log
 .idea/

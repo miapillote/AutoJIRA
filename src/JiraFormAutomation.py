@@ -6,9 +6,11 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as ec
 from Variables import URL, TEXT, XPATH
 import logging
+import getpass
 
-TESTING_MODE = False
+TESTING_MODE = True
 logger = logging.getLogger(__name__)
+
 
 class JiraFormAutomation:
     def __init__(self, ticket: Ticket, root, progress_bar, progress, browser):
@@ -37,12 +39,20 @@ class JiraFormAutomation:
         self.browser.get(URL['landing'])
         self.update_progress()
 
-        # Wait for page load and check if login is required
-        WebDriverWait(self.browser, 30).until(ec.url_contains("service.rochester.edu"))
-        if "service.rochester.edu" not in self.browser.current_url:
-            return "Could not reach landing page, try logging in."
-            # Login.LoginForm(tk.Tk(), self.browser)
-            # self.open_landing_page()
+        while True:
+            # Wait for page load and check if login is required
+            WebDriverWait(self.browser, 30).until(
+                ec.any_of(
+                    ec.url_contains("service.rochester.edu"),
+                    ec.url_contains("uidp.its.rochester.edu")))
+            if "uidp.its.rochester.edu" in self.browser.current_url:
+                print("Could not reach landing page, please log in.")
+                username = input("Username: ")
+                password = getpass.getpass("Password: ")
+                self.browser.find_elements(By.XPATH, '//*[@id="usernamevis"]')[0].send_keys(username)
+                self.browser.find_elements(By.XPATH, '//*[@id="password"]')[0].send_keys(password, Keys.RETURN)
+            else:
+                break
         self.update_progress()
 
     def fill_form(self):
