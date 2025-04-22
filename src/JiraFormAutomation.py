@@ -96,6 +96,8 @@ class JiraFormAutomation:
 
     def assign_ticket(self):
         # TODO: add in error handling in case the menu is already toggled open
+        time.sleep(2)
+        WebDriverWait(self.browser, 30).until(ec.invisibility_of_element((By.CLASS_NAME, 'aui-dialog2-header')))
         self.wait('open_ticket_element')
         self.browser.find_elements(By.XPATH, XPATH['open_ticket_element'])[0].click()
         self.update_progress()
@@ -110,7 +112,8 @@ class JiraFormAutomation:
         self.update_progress()
 
     def close_ticket(self):
-        WebDriverWait(self.browser, 30).until(ec.invisibility_of_element((By.CLASS_NAME, 'aui-blanket')))
+        time.sleep(10)
+        #WebDriverWait(self.browser, 30).until(ec.invisibility_of_element((By.CLASS_NAME, 'aui-blanket')))
         self.wait('transition_bar_element').click()
         self.update_progress()
         self.wait('close_button_element').click()
