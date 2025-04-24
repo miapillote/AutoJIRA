@@ -57,6 +57,7 @@ def worker():
             print("[Worker] Error during automation:", e)
 
         ticket_queue.task_done()
+        print("", flush=True)
 
     # Clean up after thread is done
     print("[Worker] Shutting down browser...")
@@ -101,6 +102,7 @@ def on_hotkey(action):
     ticket.print_ticket()
 
     ticket_queue.put(ticket)
+    print("", flush=True)
 
 
 def on_loan_hotkey():
