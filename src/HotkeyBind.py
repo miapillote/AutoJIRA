@@ -74,12 +74,15 @@ def on_hotkey(action):
     # copy whatever's on the clipboard first so it doesn't get tossed
     clipboard_buffer = pyperclip.paste()
 
+    # keyboard blocking to keep from opening chrome menu
+    block = keyboard.block_key('shift')
+
     time.sleep(0.5)
     keyboard.send("ctrl+a")
     time.sleep(1)
     keyboard.send("ctrl+c")
-    time.sleep(1)
-    pyautogui.click()
+
+    keyboard.unblock_key(block)
 
     copied_text = None
     for _ in range(5):  # Try a few times to get clipboard content
@@ -113,6 +116,6 @@ def on_return_hotkey():
     on_hotkey("Returned")
 
 
-keyboard.add_hotkey('ctrl+shift+l', on_loan_hotkey)
-keyboard.add_hotkey('ctrl+shift+;', on_return_hotkey)
+keyboard.add_hotkey('ctrl+shift+l', on_loan_hotkey, suppress=True)
+keyboard.add_hotkey('ctrl+shift+;', on_return_hotkey, suppress=True)
 keyboard.wait()  # Keep the script running to listen for hotkeys
