@@ -74,15 +74,10 @@ def on_hotkey(action):
     # copy whatever's on the clipboard first so it doesn't get tossed
     clipboard_buffer = pyperclip.paste()
 
-    # keyboard blocking to keep from opening chrome menu
-    block = keyboard.block_key('shift')
-
     time.sleep(0.5)
     keyboard.send("ctrl+a")
     time.sleep(1)
     keyboard.send("ctrl+c")
-
-    keyboard.unblock_key(block)
 
     copied_text = None
     for _ in range(5):  # Try a few times to get clipboard content
