@@ -78,6 +78,7 @@ def on_hotkey(action):
     keyboard.send("ctrl+a")
     time.sleep(1)
     keyboard.send("ctrl+c")
+    keyboard.release("ctrl")  # Ensure ctrl is released
 
     copied_text = None
     for _ in range(5):  # Try a few times to get clipboard content
