@@ -78,6 +78,7 @@ def on_hotkey(action):
     keyboard.send("ctrl+a")
     time.sleep(1)
     keyboard.send("ctrl+c")
+    time.sleep(0.5)
     keyboard.release("ctrl")  # Ensure ctrl is released
 
     copied_text = None
